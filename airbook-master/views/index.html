@@ -1,0 +1,274 @@
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery/jquery-ui-1.8.20.custom.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/flexigrid/flexigrid.pack.css">
+
+<!-- header:start -->
+<div id="header">
+  <div id="header-wrap">
+    <div id="header-left" title="<%= config.app.name %>">
+      <img height="32px" width="32px" class="btn" src="/favicon.png"/>
+
+      <h1 style="color: #ffffff;width:300px;margin-top: 10px">空中电话本</h1>
+    </div>
+    <div id="header-right">
+      <div id="control-search" class="btn">
+        <label><input type="text" placeholder="搜索联系人"/></label>
+      </div>
+      <div id="control-addContacts" class="btn homeImg" title="添加联系人">
+      </div>
+      <div id="control-message" class="btn homeImg" title="<%=account.name%>">
+      </div>
+      <div id="control-logout" class="btn homeImg" title="退出">
+      </div>
+      <div id="control-face" class="btn homeImg" title="<%=account.name%>">
+        <img src="<%=account.photo_path%>?size=32"/>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- header:end -->
+
+<!-- wrapper:start -->
+<div id="wrapper">
+  <div id="siderbar">
+    <div id="siderbar-in">
+      <div class="group">
+        <h3>联系人</h3>
+        <ul>
+          <li id="homeless-contacts" class="item forward" title="新增加的联系人，添加标签以后归档">
+            <i class="item-icon"></i>
+            <span class="">未归档联系人</span>
+          </li>
+          <li id="my-contacts" class="item forward" title="我的通讯录中的联系人">
+            <i class="item-icon"></i>
+            <span class="">已归档联系人</span>
+          </li>
+          <li class="item forward" title="我的通讯录中的联系人" id="random-results">
+            <i class="item-icon"></i>
+            <span class="">随便看看</span>
+          </li>
+        </ul>
+      </div>
+      <div class="sep"></div>
+      <div class="group">
+        <h3>集体</h3>
+        <ul>
+          <li id="create-collective" class="item" title="我的通讯录中的联系人">
+            <i class="item-icon"></i>
+            <span class="">创建集体</span>
+          </li>
+          <li id="my-collective" class="item forward" title="新增加的联系人，添加标签以后归档">
+            <i class="item-icon"></i>
+            <span class="">我的集体</span>
+          </li>
+          <li id="all-groups" class="item forward" title="我的通讯录中的联系人">
+            <i class="item-icon"></i>
+            <span class="">所有集体</span>
+          </li>
+        </ul>
+      </div>
+      <div class="sep"></div>
+      <div class="group">
+        <h3>过滤</h3>
+        <ul>
+          <li id="stranger" class="item forward" title="我的通讯录上没有的，但是我存在他们的通讯录中">
+            <i class="item-icon"></i>
+            <span class="">陌生人</span>
+          </li>
+          <li id="black-list" class="item forward">
+            <i class="item-icon"></i>
+            <span class="">黑名单</span>
+          </li>
+        </ul>
+      </div>
+      <div class="sep"></div>
+      <div class="group">
+        <h3>个人设置</h3>
+        <ul>
+          <li class="item" id="account-edit">
+            <i class="item-icon"></i>
+            <span class="">信息编辑</span>
+          </li>
+          <li class="item forward" id="message-manager">
+            <i class="item-icon"></i>
+            <span class="">资料管理</span>
+          </li>
+          <li class="item forward" id="card-edit">
+            <i class="item-icon"></i>
+            <span class="">制作名片</span>
+          </li>
+          <li class="item" id="password-change">
+            <i class="item-icon"></i>
+            <span class="">修改密码</span>
+          </li>
+          <li id="backup" class="item">
+            <i class="item-icon"></i>
+            <span class="">备份</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!--<div id="sidebar-fix">-->
+
+    <!--</div>-->
+  </div>
+
+  <div id="resizable-handler"></div>
+
+  <div id="main">
+    <div id="profile-manager">
+    </div>
+    <div id="contact-men" class="tab">
+      <div class="toolbar">
+        <div id="add-contact" class="btn homeImg" title="添加选中的联系人">
+        </div>
+        <div id="remove-contact" class="btn homeImg" title="删除选中的联系人">
+        </div>
+        <div id="file-contact" class="btn homeImg" title="归档选中的联系人">
+        </div>
+      </div>
+      <div id="contact-panel" class="clearfix">
+      </div>
+    </div>
+    <div id="collective-men" class="tab">
+      <div class="toolbar">
+        <div id="add-collective" class="btn homeImg" title="增加成员">
+          <!--<input type="text" id="autocomplete">-->
+        </div>
+        <div id="remove-collective" class="btn homeImg" title="删除成员">
+        </div>
+      </div>
+      <div id="collective-panel" class="clearfix">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 对话框：修改个人信息 -->
+<div id="account-edit-dialog" title="<%=account.name%>的个人信息" style="display: none">
+  <form id="account-edit-form" action="/editAccount" method="post">
+    <label style="display: block;">
+      邮箱：<input type="text" placeholder="邮箱" class="form-input account-edit-input" id="baseEmail" name="baseEmail"
+                origin="<%=account.base_email || ''%>"
+                value="<%=account.base_email || ''%>"/></label>
+    <label style="display: block;">
+      电话：<input type="text" placeholder="联系电话" class="form-input account-edit-input" id="basePhone" name="basePhone"
+                origin="<%=account.base_phone || ''%>"
+                value="<%=account.base_phone || ''%>"/></label>
+    姓名：<input type="text" placeholder="姓" class="form-input account-edit-input" style="width: 125px;" id="lastName"
+              name="lastName"
+              origin="<%=account.last_name || ''%>"
+              value="<%=account.last_name || ''%>"/>
+    <input type="text" placeholder="名" class="form-input account-edit-input" style="width: 125px;" id="firstName"
+           name="firstName"
+           origin="<%=account.first_name || ''%>"
+           value="<%=account.first_name || ''%>"/>
+    <label style="display: block;">
+      Q Q：<input type="text" placeholder="QQ号码" class="form-input account-edit-input" id="qq" name="qq"
+                 origin="<%=account.qq || ''%>"
+                 value="<%=account.qq || ''%>"/></label>
+    <label style="display: block;">
+      地址：<input type="text" placeholder="地址" class="form-input account-edit-input" id="addr" name="addr"
+                origin="<%=account.addr || ''%>"
+                value="<%=account.addr || ''%>"/></label>
+    <label style="display: block;">
+      主页：<input type="text" placeholder="http://" class="form-input account-edit-input" id="homepage" name="homepage"
+                origin="<%=account.homepage || ''%>"
+                value="<%=account.homepage || ''%>"/></label>
+  </form>
+</div>
+
+<!-- 对话框：修改密码 -->
+<div id="password-change-dialog" title="密码修改" style="display: none">
+  <form id="password-change-form" action="/changePassword" method="post">
+    <label style="display: block;">
+      当前密码：<input type="password" placeholder="当前密码" class="form-input password-change-input" id=""
+                  name="old_password"/></label>
+    <label style="display: block;">
+      新的密码：<input type="password" placeholder="输入你要修改的新密码" class="form-input password-change-input"
+                  name="new_password"/></label>
+    <label style="display: block;">
+      再次输入：<input type="password" placeholder="请再次输入新密码" class="form-input password-change-input" name="_new_password"/></label>
+  </form>
+</div>
+
+<!-- 对话框：关于空中电话本 -->
+<div id="about-airbook-dialog" title="关于空中电话本" style="display: none">
+  <p>空中电话本是一款免费的通讯录同步软件，支持多终端和WEB端管理，同时可以做人脉标签搜索和标记。希望你用的开心。</p>
+</div>
+
+<!-- 对话框：退出空中电话本 -->
+<div id="logout-dialog" title="退出登录" style="display: none">
+  <p>你……你真的……要退出登录吗……</p>
+</div>
+
+<!-- DIV：提示消息 -->
+<div id="message" style="display: none;">
+  <h3></h3>
+  <hr>
+  <p></p>
+</div>
+
+<!-- 对话框：创建集体 -->
+<div id="create-collective-dialog" title="<%=account.name%>的集体" style="display: none">
+  <form id="create-collective-form" action="/createCollective" method="post">
+    <label style="display: block;">
+      账户：<input type="text" placeholder="账户" class="form-input" id="collectiveName"
+                name="name"/>
+    </label>
+    <label style="display: block;">
+      密码：<input type="password" placeholder="输入密码" class="form-input" id="collectivePassword"
+                name="password"/>
+    </label>
+    <label style="display: block;">
+      *密码：<input type="password" placeholder="输入多一次密码" class="form-input"
+                 id="collectiveRepassword" name="repassword"/>
+    </label>
+    <label style="display: block;">
+      名字：<input type="text" placeholder="名字" class="form-input" id="collectiveFName"
+                name="firstName"/>
+    </label>
+    <label style="display: block;">
+      邮箱：<input type="text" placeholder="邮箱" class="form-input" id="collectiveBaseEmail"
+                name="baseEmail"/>
+    </label>
+    <label style="display: block;">
+      电话：<input type="text" placeholder="联系电话" class="form-input" id="collectiveBasePhone"
+                name="basePhone"/>
+    </label>
+    <label style="display: block;">
+      Q Q：<input type="text" placeholder="QQ号码" class="form-input" id="collectiveQq" name="qq"/>
+    </label>
+    <label style="display: block;">
+      地址：<input type="text" placeholder="地址" class="form-input" id="collectiveAaddr" name="addr"/>
+    </label>
+    <label style="display: block;">
+      主页：<input type="text" placeholder="http://" class="form-input" id="collectiveHomepage"
+                name="homepage"/>
+    </label>
+  </form>
+</div>
+
+
+<!-- 对话框：备注&添加标签 -->
+<div id="file-contacter-dialog" title="归档" style="display: none">
+  <form id="file-contacter-form" action="/changePassword" method="post">
+    <input id="file-contacter-id-hidden" type="hidden" name="contactid" value=""/>
+    <label style="display: block;">
+      备注：<input type="text" placeholder="给好友起个好备注吧" class="form-input password-change-input"
+                name="comment"/></label>
+    <label style="display: block;">
+      标签：<input type="text" placeholder="多个标签用“,”分割开" class="form-input password-change-input" id=""
+                name="tag"/></label>
+    <label style="display: block;" id="forbid-change">
+     <input type="checkbox" class="form-input checkbox" id="forbid" name="forbid"
+       style = "width: 18px;"/>黑名单</label>
+  </form>
+</div>
+
+<!-- wrapper:end -->
+
+<script src="/javascripts/jquery/jquery-1.7.2.min.js"></script>
+<script src="/javascripts/jquery/jquery-ui-1.8.20.custom.min.js"></script>
+<script src="/javascripts/flexigrid/flexigrid.pack.js"></script>
+<script src="/javascripts/main.js"></script>
